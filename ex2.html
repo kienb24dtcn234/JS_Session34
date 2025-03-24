@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Management</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      h1 {
+        text-align: center;
+      }
+      form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+      input,
+      select {
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .submit {
+        background-color: rgb(59, 59, 232);
+        color: white;
+        padding: 5px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .submit:hover {
+        background-color: rgb(45, 45, 200);
+      }
+      .action-btn {
+        padding: 5px 10px;
+        margin-right: 5px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .edit-btn {
+        background-color: #4caf50;
+        color: white;
+      }
+      .delete-btn {
+        background-color: #f44336;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Task Management</h1>
+    <form id="taskForm">
+      <input type="text" id="content" placeholder="Content" required />
+      <input type="date" id="dueDate" required />
+      <select id="status">
+        <option value="Pending">Choose status</option>
+        <option value="Completed">Complete</option>
+      </select>
+      <input type="text" id="assignedTo" placeholder="Username" required />
+      <button class="submit" type="submit">Submit</button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Content</th>
+          <th>Due date</th>
+          <th>Status</th>
+          <th>Assigned to</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="taskList"></tbody>
+    </table>
+    <script>
+      let taskForm = document.getElementById("taskForm");
+      let taskList = document.getElementById("taskList");
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      let editIndex = null;
+
+      function renderTasks() {
+        taskList.innerHTML = "";
+        tasks.forEach((task, index) => {
+          taskList.innerHTML += `  
+            <tr>  
+              <td>${task.id}</td>  
+              <td>${task.content}</td>  
+              <td>${task.dueDate}</td>  
+              <td>${task.status}</td>  
+              <td>${task.assignedTo}</td>  
+              <td>  
+                <button class="action-btn edit-btn" onclick="editTask(${index})">Sửa</button>  
+                <button class="action-btn delete-btn" onclick="deleteTask(${index})">Xóa</button>  
+              </td>  
+            </tr>  
+          `;
+        });
+      }
+      taskForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        let newTask = {
+          id: editIndex !== null ? tasks[editIndex].id : tasks.length + 1,
+          content: document.getElementById("content").value,
+          dueDate: document.getElementById("dueDate").value,
+          status: document.getElementById("status").value,
+          assignedTo: document.getElementById("assignedTo").value,
+        };
+        if (editIndex !== null) {
+          tasks[editIndex] = newTask;
+          editIndex = null;
+        } else {
+          tasks.push(newTask);
+        }
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        renderTasks();
+        taskForm.reset();
+      });
+      function editTask(index) {
+        editIndex = index;
+        let task = tasks[index];
+        document.getElementById("content").value = task.content;
+        document.getElementById("dueDate").value = task.dueDate;
+        document.getElementById("status").value = task.status;
+        document.getElementById("assignedTo").value = task.assignedTo;
+      }
+      function deleteTask(index) {
+        tasks.splice(index, 1);
+        tasks.forEach((task, i) => {
+          task.id = i + 1;
+        });
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        renderTasks();
+      }
+      renderTasks();
+    </script>
+  </body>
+</html>

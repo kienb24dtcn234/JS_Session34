@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      body {
+        text-align: center;
+        background-color: rgb(255, 255, 255);
+        font-family: Arial, sans-serif;
+        padding: 10px;
+      }
+      .container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 300px;
+        margin: auto;
+      }
+      label {
+        display: block;
+        margin: 10px 0 5px;
+        text-align: left;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0 15px;
+        border: 1px solid rgb(188, 186, 186);
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: rgb(64, 77, 194);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+      }
+      .result {
+        margin-top: 10px;
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Login</h1>
+      <label for="email">Email</label>
+      <input id="email" type="text" placeholder="Enter your email address" />
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter your password" />
+      <div id="result" class="result"></div>
+      <button id="loginButton" onclick="login()">Login</button>
+      <div>
+        <a href="#" id="forgotPassword">Forgot password?</a>
+        <span>or</span>
+        <a href="#" id="signUp">Sign up</a>
+      </div>
+    </div>
+    <script>
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      function login() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let div = document.getElementById("result");
+        let regex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(?:com|vn)$/;
+        if (!regex.test(email)) {
+          div.textContent = "Invalid Email!";
+          div.className = "result invalid";
+          return;
+        }
+        if (!password) {
+          div.textContent = "Password cannot be empty!";
+          div.className = "result invalid";
+          return;
+        }
+        let user = users.find(
+          (user) => user.email === email && user.password === password
+        );
+        if (!user) {
+          div.textContent = "Incorrect email or password!";
+          div.className = "result invalid";
+          return;
+        }
+        window.location.href = "./home.html";
+      }
+    </script>
+  </body>
+</html>

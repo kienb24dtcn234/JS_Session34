@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh Sách Công Việc</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        text-align: center;
+        padding: 20px;
+      }
+      .container {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 400px;
+        margin: auto;
+      }
+      h2 {
+        margin-bottom: 20px;
+      }
+      input[type="text"] {
+        width: calc(70% - 20px);
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button {
+        background-color: #45a049;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0 0;
+      }
+      li {
+        background: #f4f4f4;
+        padding: 10px;
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 5px;
+      }
+      .delete-btn {
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .delete-btn:hover {
+        background-color: darkred;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Todo List</h2>
+      <input type="text" id="nhapNhiemVu" placeholder="Thêm việc cần làm..." />
+      <button onclick="themNhiemVu()">Thêm</button>
+      <ul id="danhSachNhiemVu"></ul>
+    </div>
+    <script>
+      let danhSachNhiemVu =
+        JSON.parse(localStorage.getItem("danhSachNhiemVu")) || [];
+
+      window.onload = function () {
+        renderNhiemVu();
+      };
+
+      function themNhiemVu() {
+        let nhapNhiemVu = document.getElementById("nhapNhiemVu");
+        let giaTriNhiemVu = nhapNhiemVu.value.trim();
+        if (giaTriNhiemVu === "") {
+          alert("Vui lòng nhập nhiệm vụ!");
+          return;
+        }
+        danhSachNhiemVu.push(giaTriNhiemVu);
+        localStorage.setItem(
+          "danhSachNhiemVu",
+          JSON.stringify(danhSachNhiemVu)
+        );
+        nhapNhiemVu.value = "";
+        renderNhiemVu();
+      }
+      function renderNhiemVu() {
+        let danhSach = document.getElementById("danhSachNhiemVu");
+        danhSach.innerHTML = "";
+        danhSachNhiemVu.forEach((nhiemVu, index) => {
+          let li = document.createElement("li");
+          li.innerHTML = `  
+                    <span>${nhiemVu}</span>  
+                    <button class="delete-btn" onclick="xoaNhiemVu(${index})">Xóa</button>  
+                `;
+          danhSach.appendChild(li);
+        });
+      }
+      function xoaNhiemVu(index) {
+        if (confirm("Bạn có chắc chắn muốn xóa nhiệm vụ này không?")) {
+          danhSachNhiemVu.splice(index, 1);
+          localStorage.setItem(
+            "danhSachNhiemVu",
+            JSON.stringify(danhSachNhiemVu)
+          );
+          renderNhiemVu();
+        }
+      }
+    </script>
+  </body>
+</html>

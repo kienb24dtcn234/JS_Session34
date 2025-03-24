@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      text-align: center;
+      background-color: rgb(255, 255, 255);
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    .container {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 300px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      text-align: left;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px;
+      border: 1px solid rgb(188, 186, 186);
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: rgb(86, 86, 220);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    button {
+      background-color: rgb(64, 77, 194);
+    }
+    .result {
+      margin-top: 10px;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+  <body>
+    <div class="form">
+      <h1>Register</h1>
+      <label for="email">Email</label>
+      <input id="email" type="text" /> <br />
+      <label for="password">Mật khẩu</label>
+      <input id="password" type="password" /> <br />
+      <label for="confirmpassword">Xác nhận mật khẩu</label>
+      <input id="confirmpassword" type="password" /> <br />
+      <div id="result" class="result"></div>
+      <button id="checkButton" onclick="register()">Đăng ký</button>
+    </div>
+    <script>
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      function register() {
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+        let confirmPassword = document.getElementById("confirmpassword").value;
+        let div = document.getElementById("result");
+        let regex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|vn)$/;
+        if (!regex.test(email)) {
+          div.textContent = "Email không hợp lệ!";
+          div.className = "result invalid";
+          return;
+        }
+        if (users.some((user) => user.email === email)) {
+          div.textContent = "Email đã tồn tại!";
+          div.className = "result invalid";
+          return;
+        }
+        if (password !== confirmPassword) {
+          div.textContent = "Mật khẩu không trùng khớp!";
+          div.className = "result invalid";
+          return;
+        }
+        let user = {
+          id: Math.floor(Math.random() * 65656566),
+          email: email,
+          password: password,
+        };
+        users.push(user);
+        localStorage.setItem("users", JSON.stringify(users));
+        window.location = "./Trang_Chủ.html";
+      }
+    </script>
+  </body>
+</html>
